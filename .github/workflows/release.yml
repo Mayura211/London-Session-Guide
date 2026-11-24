@@ -30,9 +30,11 @@ jobs:
           for script in re.findall(r'<script>(.*?)</script>', source, re.S):
               subprocess.run(['node','--check','-'], input=script, text=True, encoding='utf-8', check=True)
       - name: Install dependencies
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt Pillow
+      - name: Generate application icon
+        run: python make_icon.py
       - name: Build desktop app
-        run: python -m PyInstaller --noconfirm --onefile --windowed --name LondonSessionGuide --add-data "index.html;." --add-data "version.txt;." app.py
+        run: python -m PyInstaller --noconfirm --onefile --windowed --name LondonSessionGuide --icon icon.ico --add-data "index.html;." --add-data "version.txt;." app.py
       - name: Compile installer
         shell: pwsh
         run: |
