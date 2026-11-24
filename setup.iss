@@ -16,9 +16,10 @@ RestartApplications=no
 UninstallDisplayIcon={app}\LondonSessionGuide.exe
 [Files]
 Source: "dist\LondonSessionGuide.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "icon.ico"; DestDir: "{app}"; DestName: "LondonGuide-v104.ico"; Flags: ignoreversion
 [Icons]
-Name: "{autoprograms}\London Session Guide"; Filename: "{app}\LondonSessionGuide.exe"
-Name: "{autodesktop}\London Session Guide"; Filename: "{app}\LondonSessionGuide.exe"
+Name: "{autoprograms}\London Session Guide"; Filename: "{app}\LondonSessionGuide.exe"; IconFilename: "{app}\LondonGuide-v104.ico"
+Name: "{autodesktop}\London Session Guide"; Filename: "{app}\LondonSessionGuide.exe"; IconFilename: "{app}\LondonGuide-v104.ico"
 [Run]
 Filename: "{app}\LondonSessionGuide.exe"; Description: "Open London Session Guide"; Flags: nowait postinstall skipifsilent; Check: not IsAppUpdate; BeforeInstall: ResetFrozenAppEnvironment
 
