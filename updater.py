@@ -9,6 +9,8 @@ import sys
 import threading
 import time
 import urllib.request
+import urllib.error
+import http.client
 from pathlib import Path
 
 REPOSITORY = 'Mayura211/London-Session-Guide'
@@ -40,9 +42,11 @@ def version_tuple(value):
 def open_url(url):
     request = urllib.request.Request(url, headers={
         'User-Agent': 'LondonSessionGuide-Updater',
+        'Connection': 'close',
+        'Accept-Encoding': 'identity',
         'Accept': 'application/vnd.github+json' if url == API_URL else 'application/octet-stream',
     })
-    return urllib.request.urlopen(request, timeout=30)
+    return urllib.request.urlopen(request, timeout=90)
 
 
 class Updater:
@@ -100,30 +104,42 @@ class Updater:
             self.directory.mkdir(parents=True, exist_ok=True)
             target = self.directory / f'LondonSessionGuide-{tag}.exe'
             temporary = target.with_suffix('.part')
-            hasher = hashlib.sha256()
-            received = 0
-            with open_url(url) as response, temporary.open('wb') as output:
-                if not response.url.startswith('https://'):
-                    raise ValueError('Update requires a secure connection.')
-                while True:
-                    chunk = response.read(256 * 1024)
-                    if not chunk:
-                        break
-                    received += len(chunk)
-                    if received > size:
-                        raise ValueError('The update size does not match the release.')
-                    output.write(chunk)
-                    hasher.update(chunk)
-                    self._set(progress=min(99, int(received * 100 / size)), message='Downloading update…')
-            if received != size or hasher.hexdigest() != expected:
-                raise ValueError('Update verification failed. Please download again.')
+            for attempt in range(1, 5):
+                hasher = hashlib.sha256()
+                received = 0
+                self._set(progress=0, message=f'Downloading update (attempt {attempt}/4)…')
+                try:
+                    with open_url(url) as response, temporary.open('wb') as output:
+                        if not response.url.startswith('https://'):
+                            raise ValueError('Update requires a secure connection.')
+                        while True:
+                            chunk = response.read(64 * 1024)
+                            if not chunk:
+                                break
+                            received += len(chunk)
+                            if received > size:
+                                raise ValueError('The update size does not match the release.')
+                            output.write(chunk)
+                            hasher.update(chunk)
+                            self._set(progress=min(99, int(received * 100 / size)), message=f'Downloading update (attempt {attempt}/4)…')
+                    if received != size:
+                        raise OSError('Incomplete download.')
+                    if hasher.hexdigest() != expected:
+                        raise ValueError('Update verification failed. Please download again.')
+                    break
+                except (OSError, http.client.HTTPException, urllib.error.URLError) as error:
+                    temporary.unlink(missing_ok=True)
+                    if attempt == 4:
+                        raise
+                    self._set(progress=0, message=f'Connection interrupted. Retrying ({attempt + 1}/4)…')
+                    time.sleep(2 ** attempt)
             temporary.replace(target)
             self.installer, self.digest = target, expected
             self._set(status='ready', progress=100, message='Update downloaded and verified. Ready to install.')
         except Exception as error:
             if temporary:
                 temporary.unlink(missing_ok=True)
-            self._set(status='error', message=f'Could not download update: {error}')
+            self._set(status='error', progress=0, message=f'Could not download update: {error}. Try downloading the installer from GitHub Releases in your browser.')
 
     def install_update(self, storage_backup):
         with self.lock:
