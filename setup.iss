@@ -8,6 +8,7 @@ DefaultGroupName=London Session Guide
 PrivilegesRequired=lowest
 OutputDir=installer
 OutputBaseFilename=LondonSessionGuide_Setup
+SetupIconFile=icon.ico
 Compression=lzma2
 SolidCompression=yes
 CloseApplications=yes
