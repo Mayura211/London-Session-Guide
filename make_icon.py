@@ -1,10 +1,29 @@
 from PIL import Image, ImageDraw
-im = Image.new("RGBA", (256,256), "#245c89")
-d = ImageDraw.Draw(im)
-d.rounded_rectangle((10,10,245,245), radius=38, outline="#9bc9e8", width=5)
-for y in (64,112,160,208):
-    d.line((27,y,229,y), fill="#39739e", width=2)
-for x,y1,y2,top,bottom,color in [(57,123,211,146,187,"#ffffff"),(104,91,175,111,154,"#8be3cd"),(151,102,163,118,146,"#ffffff"),(198,36,130,60,110,"#8be3cd")]:
-    d.line((x,y1,x,y2),fill=color,width=7)
-    d.rounded_rectangle((x-13,top,x+13,bottom),radius=3,fill=color)
-im.save("icon.ico", sizes=[(16,16),(24,24),(32,32),(48,48),(64,64),(128,128),(256,256)])
+import math
+S=768
+im=Image.new("RGBA",(S,S),(0,0,0,0))
+mask=Image.new("L",(S,S),0)
+ImageDraw.Draw(mask).rounded_rectangle((18,18,750,750),radius=162,fill=255)
+bg=Image.new("RGBA",(S,S))
+p=bg.load()
+for y in range(S):
+    for x in range(S):
+        t=(x+y)/(2*S)
+        p[x,y]=(int(26-14*t),int(86-57*t),int(123-75*t),255)
+im.paste(bg,(0,0),mask)
+d=ImageDraw.Draw(im)
+d.rounded_rectangle((25,25,743,743),radius=155,outline="#6596ad",width=5)
+# London clock motif, behind the trading candles.
+d.ellipse((116,100,652,636),outline="#527c91",width=9)
+for i in range(12):
+    a=math.pi*i/6
+    r=249
+    d.line((384+math.sin(a)*r,368-math.cos(a)*r,384+math.sin(a)*(r-19),368-math.cos(a)*(r-19)),fill="#7296a8",width=7)
+d.line((384,368,384,194),fill="#7296a8",width=10)
+d.line((384,368,486,307),fill="#7296a8",width=10)
+# High contrast ascending candlesticks.
+for x,lo,hi,top,bottom,c in [(212,570,350,416,514,"#e7f4ff"),(326,516,284,345,449,"#5ce1c1"),(440,455,241,301,395,"#e7f4ff"),(554,354,156,213,305,"#5ce1c1")]:
+    d.line((x,hi,x,lo),fill=c,width=14)
+    d.rounded_rectangle((x-35,top,x+35,bottom),radius=12,fill=c)
+im=im.resize((256,256),Image.Resampling.LANCZOS)
+im.save("icon.ico",sizes=[(16,16),(24,24),(32,32),(48,48),(64,64),(128,128),(256,256)])
