@@ -93,6 +93,10 @@ header .page-label{color:#c7dbe9;font-size:14px;text-align:right}.stage{flex-dir
 .side-arrow svg,.topic-menu-item svg{transition:transform 150ms ease}
 .side-arrow:active:not(:disabled) svg,.topic-menu-item:active svg{transform:scale(.85)}
 @media(prefers-reduced-motion:reduce){.matrix-table input.tick-in,.matrix-table input.tick-out,.matrix-table input.tick-in:after{animation:none!important}.matrix-table input[type=checkbox],.side-arrow svg,.topic-menu-item svg{transition:none!important}}
+/* Remove additional backtest rows without affecting the original entry */
+.matrix-date-cell .delete-entry{flex:none;width:27px;height:27px;display:grid;place-items:center;padding:3px;border-radius:6px;color:#b64b51;background:#fff2f2;border-color:#e9c7ca}
+.matrix-date-cell .delete-entry:hover:not(:disabled){background:#f9dfe2;border-color:#d99ba1}
+.matrix-date-cell .delete-entry svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 </style><body><header><div><small>TRADING PLAYBOOK</small><h1>Forex Backtest Data</h1></div><div class="header-actions"><button id="topicsBack" hidden>← Topics</button><div class="page-label" id="pageLabel" aria-live="polite">London Session · Topics</div></div></header><nav class="session-tabs" aria-label="Trading sessions"><button data-session="london" class="active" aria-pressed="true">London Session</button><button data-session="new_york" aria-pressed="false">New York Session</button><button data-session="more" aria-pressed="false">More Session</button></nav><div id="topicMenu" role="region" aria-label="London Session topics"><div class="topic-menu-list" id="topicMenuList"></div></div><div id="comingSoon" role="region" aria-label="Coming soon"><div class="coming-card"><div class="coming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><small id="comingSession"></small><h2>Coming Soon</h2><p>This session is not available yet.</p></div></div><div id="calendar"><button class="side-arrow calendar-guide" id="calendarGuide" aria-label="Return to session guide" title="Return to guide (Left arrow)">←</button><div class="matrix-card"><div class="matrix-top"><div><small>MONTHLY BACKTEST JOURNAL</small><h2 id="matrixTitle"></h2></div><div class="matrix-month"><button id="monthPrev" aria-label="Previous month">←</button><strong id="monthTitle"></strong><button id="monthNext" aria-label="Next month">→</button><button id="todayBtn">This month</button></div></div><div class="matrix-legend" id="matrixLegend"></div><div class="matrix-scroll" id="matrixScroll"><table class="matrix-table" id="matrixTable" aria-label="Monthly backtest checklist"></table></div><div class="matrix-footer"><span>Click a date for chart evidence. Use + to add another backtest on that date.</span><strong id="matrixSummary" aria-live="polite"></strong></div></div></div><div id="datebar" class="datebar"><button id="backCal">← Monthly checklist</button><strong id="dateTitle"></strong></div><div class="stage"><button id="prev" class="side-arrow" aria-label="Session guide" title="Guide (Left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7M8 12h13"/></svg></button><main id="track" aria-label="Trading topics"></main><button id="next" class="side-arrow" aria-label="Session backtest" title="Backtest (Right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M3 12h13"/></svg></button></div><div id="status" role="status" style="position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden"></div><script>
 const londonData=[['A','When Is The London Session Not Ideal?',['After a large range day greater than 2 times the 5 day ADR.','After a series of 3 consecutive Up Closes – avoid Longs.','After a series of 3 consecutive Down Closes – avoid Shorts.','After a FOMC event that produces extreme whipsaw.','Ahead of Non-Farm Payroll numbers.','The same day trading is heading into a long weekend – holiday.','Multiple High to Medium Impact News Drivers for that particular Market.','An absence of any News during London can be a “wildcard” day.']],['B','What Characteristics Do I Look For?',['The CBDR is greater than 50 pips. [Possibly Pass On London]','The Asian Range is greater than 40 pips. [Consider Delayed Protraction]','The Market starts a sustained rally or decline from 8:00 pm NY. [Poor]','If CBDR and or Asian Range is not visually consolidating… avoid London.','We aim for days when the bank will “hold” the market to build Open Float.','If the Market is trending from 8:00 pm NY – London becomes sloppy.','When the Market is conditioned for London Slop – sleep in & trade NYO.','Accumulation – Manipulation – Distribution is the business intraday.']],['C','When Is London Open Killzone Ideal?',['The Daily chart is clearly respecting PD Arrays.','The Market has recently responded off a HTF PD Array & not met an opposing PD Array.','When the Market is poised to trade higher on the Daily to Premium Arrays – London Longs are ideal.','When the Market is poised to trade lower on the Daily to Discount Arrays – London Shorts are ideal.','When the daily range has not recently exceeded its 5 day ADR – Expansion Day is due to form.']]];
 const sessionNames={london:'London Session',new_york:'New York Session',more:'More Session'};
@@ -209,9 +213,35 @@ function entryIds(d,i){
 function photoPresent(d,i,entry){const k=evidenceKey(d,i,entry);return Number(stored(k+'_count')||0)>0||!!stored(k)}
 function hasBaseRecord(d,i,rules){return entryIds(d,i).length>0||photoPresent(d,i,1)||rules.some(r=>stored(dailyKey(d,i,r.j,1))!==null)}
 function visibleEntries(d,i,rules,today){const extra=entryIds(d,i);return d===today||hasBaseRecord(d,i,rules)?[1,...extra]:[]}
+function entryCounterKey(d,i){return entriesKey(d,i)+'_last_id'}
+function lastEntryId(d,i,ids){
+  const counter=Number(stored(entryCounterKey(d,i))||1);
+  return Math.max(1,Number.isSafeInteger(counter)?counter:1,...ids)
+}
 function addEntry(d,i){
-  const ids=entryIds(d,i),next=Math.max(1,...ids)+1;
-  try{localStorage.setItem(entriesKey(d,i),JSON.stringify([...ids,next]));renderCalendar(true);const added=document.getElementById('backtest-'+d+'-'+next);if(added)added.scrollIntoView({block:'nearest'})}catch(e){alert('Unable to save the additional backtest.')}
+  const ids=entryIds(d,i),next=lastEntryId(d,i,ids)+1;
+  try{
+    if(!Number.isSafeInteger(next))throw Error('Entry limit reached.');
+    localStorage.setItem(entryCounterKey(d,i),String(next));
+    localStorage.setItem(entriesKey(d,i),JSON.stringify([...ids,next]));
+    renderCalendar(true);const added=document.getElementById('backtest-'+d+'-'+next);if(added)added.scrollIntoView({block:'nearest'})
+  }catch(e){alert('Unable to save the additional backtest.')}
+}
+async function removeEntry(d,i,entry){
+  const ids=entryIds(d,i);
+  if(entry===1||!ids.includes(entry))return;
+  if(!confirm('Delete Backtest '+entry+' for '+d+'? Its checkboxes, charts and photo notes will be removed. Other backtests will not change.'))return;
+  const photo=evidenceKey(d,i,entry),checks=data[i][2].map((_,j)=>dailyKey(d,i,j,entry));
+  try{
+    // Preserve the high-water ID so deleted IDs and their evidence cannot be reused.
+    localStorage.setItem(entryCounterKey(d,i),String(lastEntryId(d,i,ids)));
+    localStorage.setItem(entriesKey(d,i),JSON.stringify(ids.filter(n=>n!==entry)));
+  }catch(e){alert('Unable to delete the backtest. No records were removed.');return}
+  let cleanupFailed=false;
+  try{for(const key of checks)localStorage.removeItem(key);localStorage.removeItem(photo);localStorage.removeItem(photo+'_count')}catch(e){cleanupFailed=true}
+  renderCalendar(true);
+  try{await galleryDelete(photo)}catch(e){cleanupFailed=true}
+  if(cleanupFailed)alert('The row was removed, but some hidden saved data could not be cleaned up. It will not appear in new backtests.')
 }
 function showCalendar(direction=-1){
   matrixTopic=current;selectedDate=null;selectedEntry=1;positions.check=current;
@@ -245,6 +275,11 @@ function renderCalendar(keepScroll=false){
       if(photoPresent(d,i,entry)){const dot=document.createElement('span');dot.className='evidence-dot';dot.textContent=' 📷';dateBtn.append(dot)}
       dateWrap.append(dateBtn);
       if(entry===1){const plus=document.createElement('button');plus.className='add-entry';plus.type='button';plus.textContent='+';plus.title='Add another backtest for '+d;plus.setAttribute('aria-label',plus.title);plus.onclick=()=>addEntry(d,i);dateWrap.append(plus)}
+      else{
+        const remove=document.createElement('button');remove.type='button';remove.className='delete-entry';remove.title='Delete Backtest '+entry;remove.setAttribute('aria-label','Delete '+d+' Backtest '+entry);
+        remove.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg>';
+        remove.onclick=()=>removeEntry(d,i,entry);dateWrap.append(remove)
+      }
       dateCell.append(dateWrap);let count=0;
       const score=document.createElement('span');score.className='matrix-score';
       const updateScore=()=>{score.textContent=count+'/'+rules.length;score.classList.toggle('complete',rules.length>0&&count===rules.length)};
@@ -269,6 +304,7 @@ function openDate(d,entry=1){
 const dbPromise=new Promise((resolve,reject)=>{try{const r=indexedDB.open('LondonSessionEvidence',1);r.onupgradeneeded=()=>r.result.createObjectStore('gallery');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)}catch(e){reject(e)}});dbPromise.catch(()=>{});
 async function galleryRead(k){const db=await dbPromise;return new Promise((res,rej)=>{const r=db.transaction('gallery').objectStore('gallery').get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
 async function galleryWrite(k,v){const db=await dbPromise;return new Promise((res,rej)=>{const t=db.transaction('gallery','readwrite');t.objectStore('gallery').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
+async function galleryDelete(k){const db=await dbPromise;return new Promise((res,rej)=>{const t=db.transaction('gallery','readwrite');t.objectStore('gallery').delete(k);t.oncomplete=res;t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
 function addPhoto(section,i){const key=evidenceKey(selectedDate,i,selectedEntry),area=document.createElement('div');area.className='photo-area';area.innerHTML=`<div class="photo-head"><div><strong>Chart evidence</strong><div class="cal-help">Attach screenshots and add a note to each image.</div></div><span class="photo-count"></span></div><label class="upload-label">＋ Add chart photos · Select multiple images<input class="file-picker" type="file" multiple accept="image/*"></label><div class="gallery"></div><div class="photo-msg" role="status"></div>`;section.append(area);const input=area.querySelector('input'),grid=area.querySelector('.gallery'),msg=area.querySelector('.photo-msg');let entries=[],queue=Promise.resolve();input.disabled=true;
 function save(){const snapshot=entries.map(x=>({...x}));queue=queue.catch(()=>{}).then(()=>galleryWrite(key,snapshot)).then(()=>{try{if(snapshot.length)localStorage.setItem(key+'_count',String(snapshot.length));else localStorage.removeItem(key+'_count')}catch(e){}msg.textContent='Saved locally.'}).catch(()=>{msg.textContent='Could not save. Browser storage may be full or unavailable.'});return queue}
 function draw(){grid.replaceChildren();area.querySelector('.photo-count').textContent=entries.length+' photos';entries.forEach((entry,n)=>{const card=document.createElement('article');card.className='photo-card';const img=document.createElement('img');img.alt='Chart evidence '+(n+1);img.src=entry.src;img.onclick=()=>{const d=document.createElement('dialog'),p=document.createElement('img'),close=document.createElement('button');p.src=entry.src;close.textContent='Close';close.onclick=()=>d.close();d.append(p,close);document.body.append(d);d.onclose=()=>d.remove();d.showModal()};const meta=document.createElement('div');meta.className='photo-meta';const title=document.createElement('strong');title.textContent='Photo '+(n+1);const remove=document.createElement('button');remove.textContent='Remove';remove.onclick=()=>{if(!confirm('Remove this photo and its note?'))return;entries=entries.filter(x=>x!==entry);draw();save()};meta.append(title,remove);const note=document.createElement('textarea');note.placeholder='Write a short note about this chart…';note.setAttribute('aria-label','Note for photo '+(n+1));note.value=entry.note||'';note.oninput=()=>{entry.note=note.value;save()};card.append(img,meta,note);grid.append(card)})}
