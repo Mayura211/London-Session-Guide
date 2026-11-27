@@ -21,6 +21,6 @@ if __name__ == '__main__':
     # Use a stable HTML path and WebView profile across installer upgrades.
     html = data / 'index.html'
     html.write_bytes((resource / 'index.html').read_bytes())
-    webview.create_window('London Session Guide', str(html), width=1280, height=850,
+    webview.create_window('Forex Backtest Data', str(html), width=1280, height=850,
                           min_size=(850, 600), js_api=API((resource / 'version.txt').read_text().strip()))
     webview.start(private_mode=False, storage_path=str(data / 'WebView'), gui='edgechromium')

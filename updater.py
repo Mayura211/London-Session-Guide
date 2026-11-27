@@ -43,6 +43,8 @@ def open_url(url):
     request = urllib.request.Request(url, headers={
         'User-Agent': 'LondonSessionGuide-Updater',
         'Connection': 'close',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
         'Accept-Encoding': 'identity',
         'Accept': 'application/vnd.github+json' if url == API_URL else 'application/octet-stream',
     })
