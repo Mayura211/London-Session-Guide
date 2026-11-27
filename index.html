@@ -69,7 +69,19 @@ header .page-label{color:#c7dbe9;font-size:14px;text-align:right}.stage{flex-dir
 .topic-menu-item:hover:not(:disabled){background:#f7fbff;border-color:#8eacc4;transform:translateY(-2px)}.topic-menu-title{flex:1;min-width:0;font-size:clamp(18px,2.1vw,28px);font-weight:650;line-height:1.25;letter-spacing:-.4px}.topic-menu-number{font-size:12px;letter-spacing:1px;background:#e5eff7;color:var(--accent);border-radius:10px;padding:10px;flex:none}.topic-menu-item svg{width:23px;height:23px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 #topicsBack[hidden]{display:none!important}#topicsBack{font-size:12px;padding:7px 12px;color:var(--navy);white-space:nowrap}.header-actions{display:flex;align-items:center;gap:10px}
 @media(max-width:650px){.topic-menu-item{padding:16px 12px;gap:10px;min-height:80px}.topic-menu-number{padding:6px}.topic-menu-item svg{width:18px}.header-actions{gap:5px}}
-</style><body><header><div><small>TRADING PLAYBOOK</small><h1>Forex Backtest Data</h1></div><div class="header-actions"><button id="topicsBack" hidden>← Topics</button><div class="page-label" id="pageLabel" aria-live="polite">London Session · Topics</div></div></header><nav class="session-tabs" aria-label="Trading sessions"><button data-session="london" class="active" aria-pressed="true">London Session</button><button data-session="new_york" aria-pressed="false">New York Session</button><button data-session="more" aria-pressed="false">More Session</button></nav><div id="topicMenu" role="region" aria-label="London Session topics"><div class="topic-menu-list" id="topicMenuList"></div></div><div id="comingSoon" role="region" aria-label="Coming soon"><div class="coming-card"><div class="coming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><small id="comingSession"></small><h2>Coming Soon</h2><p>This session is not available yet.</p></div></div><div id="calendar"><button class="side-arrow calendar-guide" id="calendarGuide" aria-label="Return to session guide" title="Return to guide (Left arrow)">←</button><div class="matrix-card"><div class="matrix-top"><div><small>MONTHLY BACKTEST JOURNAL</small><h2 id="matrixTitle"></h2></div><div class="matrix-month"><button id="monthPrev" aria-label="Previous month">←</button><strong id="monthTitle"></strong><button id="monthNext" aria-label="Next month">→</button><button id="todayBtn">This month</button></div></div><div class="matrix-legend" id="matrixLegend"></div><div class="matrix-scroll" id="matrixScroll"><table class="matrix-table" id="matrixTable" aria-label="Monthly backtest checklist"></table></div><div class="matrix-footer"><span>Click a date to open its chart evidence and notes.</span><strong id="matrixSummary" aria-live="polite"></strong></div></div><div class="topic-controls" id="matrixNav"><button id="matrixUp" title="Previous topic (Up arrow)" aria-label="Previous topic">↑</button><span id="matrixCount">Topic 1 / 3</span><button id="matrixDown" title="Next topic (Down arrow)" aria-label="Next topic">↓</button></div></div><div id="datebar" class="datebar"><button id="backCal">← Monthly checklist</button><strong id="dateTitle"></strong></div><div class="stage"><button id="prev" class="side-arrow" aria-label="Session guide" title="Guide (Left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7M8 12h13"/></svg></button><main id="track" aria-label="Trading topics"></main><button id="next" class="side-arrow" aria-label="Session backtest" title="Backtest (Right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M3 12h13"/></svg></button><div class="topic-controls"><button id="topicUp" aria-label="Previous topic" title="Previous topic (Up arrow)">↑</button><span id="topicCount" aria-live="polite">Topic 1 / 3</span><button id="topicDown" aria-label="Next topic" title="Next topic (Down arrow)">↓</button></div></div><div id="status" role="status" style="position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden"></div><script>
+/* One selected topic, independent backtest entries */
+.stage #track{display:block;overflow:hidden;scroll-snap-type:none}
+.stage #track>section{height:100%;width:100%;overflow-y:auto}
+.stage{padding-bottom:10px}
+.matrix-date-cell{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.matrix-date-cell .matrix-date{min-width:0;white-space:normal}
+.matrix-date-cell .add-entry{flex:none;font-size:18px;line-height:1;padding:3px 7px;border-radius:6px;background:#e5eff7;color:var(--accent)}
+.matrix-entry-label{display:block;color:var(--muted);font-size:10px;font-weight:500}
+.matrix-table th:first-child,.matrix-table td:first-child{width:160px}
+.matrix-table tr.extra-entry td:first-child{padding-left:22px}
+.matrix-table .empty-records{text-align:center!important;padding:22px;color:var(--muted);white-space:normal}
+@media(max-width:650px){.matrix-table th:first-child,.matrix-table td:first-child{width:133px}.matrix-table tr.extra-entry td:first-child{padding-left:12px}}
+</style><body><header><div><small>TRADING PLAYBOOK</small><h1>Forex Backtest Data</h1></div><div class="header-actions"><button id="topicsBack" hidden>← Topics</button><div class="page-label" id="pageLabel" aria-live="polite">London Session · Topics</div></div></header><nav class="session-tabs" aria-label="Trading sessions"><button data-session="london" class="active" aria-pressed="true">London Session</button><button data-session="new_york" aria-pressed="false">New York Session</button><button data-session="more" aria-pressed="false">More Session</button></nav><div id="topicMenu" role="region" aria-label="London Session topics"><div class="topic-menu-list" id="topicMenuList"></div></div><div id="comingSoon" role="region" aria-label="Coming soon"><div class="coming-card"><div class="coming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><small id="comingSession"></small><h2>Coming Soon</h2><p>This session is not available yet.</p></div></div><div id="calendar"><button class="side-arrow calendar-guide" id="calendarGuide" aria-label="Return to session guide" title="Return to guide (Left arrow)">←</button><div class="matrix-card"><div class="matrix-top"><div><small>MONTHLY BACKTEST JOURNAL</small><h2 id="matrixTitle"></h2></div><div class="matrix-month"><button id="monthPrev" aria-label="Previous month">←</button><strong id="monthTitle"></strong><button id="monthNext" aria-label="Next month">→</button><button id="todayBtn">This month</button></div></div><div class="matrix-legend" id="matrixLegend"></div><div class="matrix-scroll" id="matrixScroll"><table class="matrix-table" id="matrixTable" aria-label="Monthly backtest checklist"></table></div><div class="matrix-footer"><span>Click a date for chart evidence. Use + to add another backtest on that date.</span><strong id="matrixSummary" aria-live="polite"></strong></div></div></div><div id="datebar" class="datebar"><button id="backCal">← Monthly checklist</button><strong id="dateTitle"></strong></div><div class="stage"><button id="prev" class="side-arrow" aria-label="Session guide" title="Guide (Left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7M8 12h13"/></svg></button><main id="track" aria-label="Trading topics"></main><button id="next" class="side-arrow" aria-label="Session backtest" title="Backtest (Right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M3 12h13"/></svg></button></div><div id="status" role="status" style="position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden"></div><script>
 const londonData=[['A','When Is The London Session Not Ideal?',['After a large range day greater than 2 times the 5 day ADR.','After a series of 3 consecutive Up Closes – avoid Longs.','After a series of 3 consecutive Down Closes – avoid Shorts.','After a FOMC event that produces extreme whipsaw.','Ahead of Non-Farm Payroll numbers.','The same day trading is heading into a long weekend – holiday.','Multiple High to Medium Impact News Drivers for that particular Market.','An absence of any News during London can be a “wildcard” day.']],['B','What Characteristics Do I Look For?',['The CBDR is greater than 50 pips. [Possibly Pass On London]','The Asian Range is greater than 40 pips. [Consider Delayed Protraction]','The Market starts a sustained rally or decline from 8:00 pm NY. [Poor]','If CBDR and or Asian Range is not visually consolidating… avoid London.','We aim for days when the bank will “hold” the market to build Open Float.','If the Market is trending from 8:00 pm NY – London becomes sloppy.','When the Market is conditioned for London Slop – sleep in & trade NYO.','Accumulation – Manipulation – Distribution is the business intraday.']],['C','When Is London Open Killzone Ideal?',['The Daily chart is clearly respecting PD Arrays.','The Market has recently responded off a HTF PD Array & not met an opposing PD Array.','When the Market is poised to trade higher on the Daily to Premium Arrays – London Longs are ideal.','When the Market is poised to trade lower on the Daily to Discount Arrays – London Shorts are ideal.','When the daily range has not recently exceeded its 5 day ADR – Expansion Day is due to form.']]];
 const sessionNames={london:'London Session',new_york:'New York Session',more:'More Session'};
 let session='london';
@@ -79,16 +91,39 @@ function scoped(key){return session==='london'?key:'lsg_'+session+'_'+key.slice(
 function customKey(i,j){return scoped('lsg_custom_rule_'+i+'_'+j)}
 function ruleText(i,j,item){if(session==='london')return item;try{return localStorage.getItem(customKey(i,j))||''}catch(e){return ''}}
 const track=document.querySelector('#track'),status=document.querySelector('#status');let current=0;const slides=[];let storageOK=true;try{localStorage.setItem('lsg_test','1');localStorage.removeItem('lsg_test')}catch(e){storageOK=false;status.textContent='Local saving unavailable'}
-let mode="guide"; let menuOpen=false; let positions={guide:0,check:0}; const sessionPositions={london:positions,new_york:{guide:0,check:0},more:{guide:0,check:0}}; function render(){track.replaceChildren();slides.length=0;track.classList.toggle("check-mode",mode==="check");data.forEach(([id,title,items],i)=>{const s=document.createElement('section');s.innerHTML=`<small>TOPIC ${String(i+1).padStart(2,'0')} / 03</small><h2></h2><div class="rules"></div>`;s.querySelector('h2').textContent=title;if(mode==='check'){s.querySelector('.rules').remove();addPhoto(s,i);track.append(s);slides.push(s);return;}items.forEach((item,j)=>{const wording=ruleText(i,j,item);if(mode==='check'&&session!=='london'&&!wording.trim())return;const card=document.createElement(mode==='check'?'label':'article');card.className='rule';const letter=String.fromCharCode(65+j);card.innerHTML='<div class="statement"><span class="letter"></span><span class="wording"></span></div><textarea placeholder="Add your own notes here…" spellcheck="true"></textarea>';card.querySelector('.letter').textContent=letter+')';card.querySelector('.wording').textContent=session!=='london'&&mode==='guide'?'Custom rule '+(j+1):wording;if(mode==='check'){card.querySelector('textarea').remove();const c=document.createElement('input');c.type='checkbox';c.setAttribute('aria-label',letter+') '+wording);card.querySelector('.statement').prepend(c);const k=scoped('lsg_daily_'+selectedDate+'_'+i+'_'+j);try{c.checked=localStorage.getItem(k)==='1'}catch(e){}c.addEventListener('change',()=>{try{localStorage.setItem(k,c.checked?'1':'0')}catch(e){status.textContent='Unable to save checkbox'}});s.querySelector('.rules').append(card);return;}const t=card.querySelector('textarea');t.setAttribute('aria-label',title+' — rule '+letter+' notes');const key=session==='london'?scoped('lsg_v2_'+i+'_'+j):customKey(i,j);if(session!=='london'){card.classList.add('custom-rule');t.placeholder='Enter a checklist rule for this topic…';}try{t.value=localStorage.getItem(key)||''}catch(e){}t.addEventListener('input',()=>{try{localStorage.setItem(key,t.value);status.textContent='Notes saved locally ✓'}catch(e){status.textContent='Unable to save notes';t.setCustomValidity('Unable to save notes locally');t.reportValidity()}});s.querySelector('.rules').append(card)});if(mode==='check'){if(!s.querySelector('.rules').children.length){const empty=document.createElement('p');empty.className='empty-rules';empty.textContent='No rules yet. Go left to the guide to add custom checklist rules. You can still save chart evidence below.';s.querySelector('.rules').append(empty)}addPhoto(s,i);}track.append(s);slides.push(s)});track.scrollTo({top:positions[mode]*track.clientHeight,behavior:"instant"});update();}
-function update(){
-  if(track.clientHeight)current=Math.max(0,Math.min(data.length-1,Math.round(track.scrollTop/track.clientHeight)));
-  document.querySelector('#topicUp').disabled=current===0;
-  document.querySelector('#topicDown').disabled=current===data.length-1;
-  document.querySelector('#topicCount').textContent='Topic '+(current+1)+' / '+data.length;
-  document.querySelector('#prev').disabled=false;document.querySelector('#prev').title=mode==='guide'?'Return to topics (Left arrow)':'Guide (Left arrow)';document.querySelector('#prev').setAttribute('aria-label',mode==='guide'?'Return to topics':'Session guide');
-  document.querySelector('#next').disabled=mode==='check';
+let mode='guide',menuOpen=false;
+let positions={guide:0,check:0};
+const sessionPositions={london:positions,new_york:{guide:0,check:0},more:{guide:0,check:0}};
+function render(){
+  track.replaceChildren();slides.length=0;track.classList.toggle('check-mode',mode==='check');
+  const i=current,[id,title,items]=data[i],section=document.createElement('section');
+  section.innerHTML='<small></small><h2></h2>';
+  section.querySelector('small').textContent='TOPIC '+String(i+1).padStart(2,'0')+' / '+data.length;
+  section.querySelector('h2').textContent=title;
+  if(mode==='check'){
+    addPhoto(section,i);
+  }else{
+    const rules=document.createElement('div');rules.className='rules';section.append(rules);
+    items.forEach((item,j)=>{
+      const card=document.createElement('article');card.className='rule';
+      const letter=String.fromCharCode(65+j);
+      card.innerHTML='<div class="statement"><span class="letter"></span><span class="wording"></span></div><textarea placeholder="Add your own notes here…" spellcheck="true"></textarea>';
+      card.querySelector('.letter').textContent=letter+')';card.querySelector('.wording').textContent=item;
+      const t=card.querySelector('textarea'),key=scoped('lsg_v2_'+i+'_'+j);
+      t.setAttribute('aria-label',title+' — rule '+letter+' notes');
+      try{t.value=localStorage.getItem(key)||''}catch(e){}
+      t.addEventListener('input',()=>{try{localStorage.setItem(key,t.value);t.setCustomValidity('');status.textContent='Notes saved locally ✓'}catch(e){status.textContent='Unable to save notes';t.setCustomValidity('Unable to save notes locally');t.reportValidity()}});
+      rules.append(card)
+    });
+  }
+  track.append(section);slides.push(section);track.scrollTop=0;update()
 }
-function go(i){if(i>=0&&i<data.length)track.scrollTo({top:i*track.clientHeight,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}
+function update(){
+  const prev=document.querySelector('#prev'),next=document.querySelector('#next');
+  prev.disabled=false;prev.title=mode==='guide'?'Return to topics (Left arrow)':'Monthly checklist (Left arrow)';
+  prev.setAttribute('aria-label',mode==='guide'?'Return to topics':'Monthly checklist');
+  next.disabled=mode==='check';
+}
 function syncHeader(){document.querySelector('#pageLabel').textContent=sessionNames[session]+' · '+(session!=='london'?'Coming Soon':menuOpen?'Topics':mode==='guide'?'Guide':'Backtest Confirmation');document.querySelector('#topicsBack').hidden=session!=='london'||menuOpen;document.querySelectorAll('[data-session]').forEach(b=>{const active=b.dataset.session===session;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))})}
 function switchPage(next){if(session!=='london'||menuOpen||next===mode)return;const topic=mode==='check'&&!selectedDate?matrixTopic:current;positions[mode]=topic;positions[next]=topic;mode=next;syncHeader();if(mode==='check'){matrixTopic=topic;showCalendar()}else{selectedDate=null;calendar.classList.remove('show');datebar.classList.remove('show');stage.classList.remove('hidden');render()}}
 function showTopics(){
@@ -104,7 +139,7 @@ function openTopic(i){
   menuOpen=false;mode='guide';selectedDate=null;positions.guide=i;positions.check=i;
   document.querySelector('#topicMenu').classList.remove('show');
   calendar.classList.remove('show');datebar.classList.remove('show');stage.classList.remove('hidden');
-  syncHeader();render();go(i);
+  current=i;matrixTopic=i;syncHeader();render();
 }
 function switchSession(next){
   if(next==='london'&&session==='london'){showTopics();return;}
@@ -120,7 +155,7 @@ function switchSession(next){
 }
 document.querySelectorAll('[data-session]').forEach(b=>b.onclick=()=>switchSession(b.dataset.session));
 document.querySelector('#topicsBack').onclick=showTopics;
-document.querySelector('#prev').onclick=()=>mode==='guide'?showTopics():switchPage('guide');
+document.querySelector('#prev').onclick=()=>mode==='guide'?showTopics():showCalendar();
 const menuList=document.querySelector('#topicMenuList');
 londonData.forEach(([,title],i)=>{
   const b=document.createElement('button');b.type='button';b.className='topic-menu-item';
@@ -131,73 +166,89 @@ londonData.forEach(([,title],i)=>{
 });
 document.querySelector('#next').onclick=()=>switchPage('check');
 document.querySelector('#calendarGuide').onclick=()=>switchPage('guide');
-document.querySelector('#topicUp').onclick=()=>go(current-1);
-document.querySelector('#topicDown').onclick=()=>go(current+1);
-track.addEventListener('scroll',update,{passive:true});
-addEventListener('resize',()=>{if(session==='london'&&track.clientHeight){track.scrollTo({top:current*track.clientHeight,behavior:'instant'});update()}});
 addEventListener('keydown',e=>{
   if(session!=='london'||menuOpen||e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||e.target.closest('textarea,input,select,[contenteditable],dialog')||document.querySelector('dialog[open]'))return;
-  if(e.key==='ArrowLeft'){e.preventDefault();if(mode==='check')switchPage('guide');else showTopics()}
-  else if(e.key==='ArrowRight'){if(mode==='guide'){e.preventDefault();switchPage('check')}}
-  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const delta=e.key==='ArrowDown'?1:-1;if(mode==='check'&&!selectedDate)moveMatrix(delta);else go(current+delta)}
+  if(e.key==='ArrowLeft'){e.preventDefault();if(mode==='guide')showTopics();else if(selectedDate)showCalendar();else switchPage('guide')}
+  else if(e.key==='ArrowRight'&&mode==='guide'){e.preventDefault();switchPage('check')}
 });
-const calendar=document.querySelector('#calendar'),datebar=document.querySelector('#datebar'),stage=document.querySelector('.stage');let selectedDate=null;let matrixTopic=0;let month=new Date();const dateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-function showCalendar(){
-  if(selectedDate&&track.clientHeight)matrixTopic=current;
-  selectedDate=null;positions.check=matrixTopic;stage.classList.add('hidden');datebar.classList.remove('show');calendar.classList.add('show');renderCalendar()
+const calendar=document.querySelector('#calendar'),datebar=document.querySelector('#datebar'),stage=document.querySelector('.stage');let selectedDate=null;let selectedEntry=1;let matrixTopic=0;let month=new Date();const dateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function entrySuffix(entry){return entry===1?'':'_entry_'+entry}
+function dailyKey(d,i,j,entry){return scoped('lsg_daily_'+d+'_'+i+'_'+j+entrySuffix(entry))}
+function evidenceKey(d,i,entry){return scoped('lsg_photo_'+d+'_'+i+entrySuffix(entry))}
+function entriesKey(d,i){return scoped('lsg_entries_'+d+'_'+i)}
+function stored(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function entryIds(d,i){
+  try{const v=JSON.parse(stored(entriesKey(d,i))||'[]');return Array.isArray(v)?[...new Set(v.filter(n=>Number.isSafeInteger(n)&&n>=2))].sort((a,b)=>a-b):[]}catch(e){return []}
 }
-function moveMatrix(delta){const i=matrixTopic+delta;if(i<0||i>=data.length)return;matrixTopic=i;positions.check=i;renderCalendar()}
-document.querySelector('#matrixUp').onclick=()=>moveMatrix(-1);
-document.querySelector('#matrixDown').onclick=()=>moveMatrix(1);
-function renderCalendar(){
-  const y=month.getFullYear(),m=month.getMonth(),days=new Date(y,m+1,0).getDate(),i=matrixTopic;
-  const table=document.querySelector('#matrixTable'),legend=document.querySelector('#matrixLegend'),summary=document.querySelector('#matrixSummary');
-  const [id,title,items]=data[i],rules=items.map((item,j)=>({j,text:ruleText(i,j,item),letter:String.fromCharCode(65+j)})).filter(r=>session==='london'||r.text.trim());
+function photoPresent(d,i,entry){const k=evidenceKey(d,i,entry);return Number(stored(k+'_count')||0)>0||!!stored(k)}
+function hasBaseRecord(d,i,rules){return entryIds(d,i).length>0||photoPresent(d,i,1)||rules.some(r=>stored(dailyKey(d,i,r.j,1))!==null)}
+function visibleEntries(d,i,rules,today){const extra=entryIds(d,i);return d===today||hasBaseRecord(d,i,rules)?[1,...extra]:[]}
+function addEntry(d,i){
+  const ids=entryIds(d,i),next=Math.max(1,...ids)+1;
+  try{localStorage.setItem(entriesKey(d,i),JSON.stringify([...ids,next]));renderCalendar(true);const added=document.getElementById('backtest-'+d+'-'+next);if(added)added.scrollIntoView({block:'nearest'})}catch(e){alert('Unable to save the additional backtest.')}
+}
+function showCalendar(){
+  matrixTopic=current;selectedDate=null;selectedEntry=1;positions.check=current;
+  stage.classList.add('hidden');datebar.classList.remove('show');calendar.classList.add('show');renderCalendar()
+}
+function renderCalendar(keepScroll=false){
+  const y=month.getFullYear(),m=month.getMonth(),days=new Date(y,m+1,0).getDate(),i=current,today=dateKey(new Date());
+  matrixTopic=i;
+  const table=document.querySelector('#matrixTable'),legend=document.querySelector('#matrixLegend'),summary=document.querySelector('#matrixSummary'),scroll=document.querySelector('#matrixScroll'),oldScroll=scroll.scrollTop;
+  const [id,title,items]=data[i],rules=items.map((item,j)=>({j,text:item,letter:String.fromCharCode(65+j)}));
   document.querySelector('#matrixTitle').textContent=title;
   document.querySelector('#monthTitle').textContent=month.toLocaleDateString('en',{month:'long',year:'numeric'});
-  document.querySelector('#matrixCount').textContent='Topic '+(i+1)+' / '+data.length;
-  document.querySelector('#matrixUp').disabled=i===0;document.querySelector('#matrixDown').disabled=i===data.length-1;
   legend.replaceChildren();table.replaceChildren();
   const details=document.createElement('details'),label=document.createElement('summary'),ul=document.createElement('ul');label.textContent='Rule reference · '+rules.length+' criteria';details.append(label,ul);
   rules.forEach(rule=>{const li=document.createElement('li');li.textContent=rule.letter+') '+rule.text;ul.append(li)});legend.append(details);
-  if(!rules.length){const p=document.createElement('span');p.className='matrix-empty';p.textContent='Add custom rules in the guide. Dates are available for chart evidence.';legend.append(p)}
   const thead=table.createTHead(),head=thead.insertRow();
   function header(text,title){const th=document.createElement('th');th.scope='col';th.textContent=text;if(title)th.title=title;head.append(th)}
-  header('Date / Day');rules.forEach(rule=>header(rule.letter,rule.text));header('Checked');
-  const body=table.createTBody();let total=0;
-  const updateSummary=()=>{summary.textContent=total+' / '+(days*rules.length)+' checks'};
+  header('Date / Backtest');rules.forEach(rule=>header(rule.letter,rule.text));header('Checked');
+  const body=table.createTBody();let total=0,rowCount=0;
+  const updateSummary=()=>{summary.textContent=rowCount+' backtest'+(rowCount===1?'':'s')+' · '+total+' / '+(rowCount*rules.length)+' checks'};
   for(let n=1;n<=days;n++){
-    const date=new Date(y,m,n),d=dateKey(date),tr=body.insertRow(),dateCell=tr.insertCell();
-    if(d===dateKey(new Date()))tr.classList.add('is-today');if(date.getDay()===0||date.getDay()===6)tr.classList.add('weekend');
-    const dateBtn=document.createElement('button');dateBtn.className='matrix-date';dateBtn.textContent=String(n).padStart(2,'0')+' '+date.toLocaleDateString('en',{weekday:'short'});
-    dateBtn.title='Open '+d+' chart evidence';dateBtn.onclick=()=>openDate(d);
-    const photoKey=scoped('lsg_photo_'+d+'_'+i);
-    try{if(Number(localStorage.getItem(photoKey+'_count')||0)||localStorage.getItem(photoKey)){const dot=document.createElement('span');dot.className='evidence-dot';dot.textContent=' 📷';dateBtn.append(dot)}}catch(e){}
-    dateCell.append(dateBtn);let count=0;
-    const score=document.createElement('span');score.className='matrix-score';
-    const updateScore=()=>{score.textContent=count+'/'+rules.length;score.classList.toggle('complete',rules.length>0&&count===rules.length)};
-    rules.forEach(rule=>{
-      const td=tr.insertCell(),c=document.createElement('input'),key=scoped('lsg_daily_'+d+'_'+i+'_'+rule.j);
-      c.type='checkbox';c.title=rule.letter+') '+rule.text;c.setAttribute('aria-label',d+' — '+rule.letter+') '+rule.text);
-      try{c.checked=localStorage.getItem(key)==='1'}catch(e){}
-      if(c.checked){count++;total++}
-      c.addEventListener('change',()=>{try{localStorage.setItem(key,c.checked?'1':'0');const delta=c.checked?1:-1;count+=delta;total+=delta;updateScore();updateSummary()}catch(e){c.checked=!c.checked;alert('Unable to save this checkbox.')}});
-      td.append(c)
-    });
-    tr.insertCell().append(score);updateScore()
+    const date=new Date(y,m,n),d=dateKey(date),entries=visibleEntries(d,i,rules,today);
+    for(const entry of entries){
+      const tr=body.insertRow(),dateCell=tr.insertCell();tr.id='backtest-'+d+'-'+entry;rowCount++;
+      if(d===today)tr.classList.add('is-today');if(date.getDay()===0||date.getDay()===6)tr.classList.add('weekend');if(entry>1)tr.classList.add('extra-entry');
+      const dateWrap=document.createElement('div');dateWrap.className='matrix-date-cell';
+      const dateBtn=document.createElement('button');dateBtn.className='matrix-date';dateBtn.type='button';
+      dateBtn.textContent=String(n).padStart(2,'0')+' '+date.toLocaleDateString('en',{weekday:'short'});
+      const entryLabel=document.createElement('span');entryLabel.className='matrix-entry-label';entryLabel.textContent='Backtest '+entry;dateBtn.append(entryLabel);
+      dateBtn.title='Open '+d+' — Backtest '+entry+' chart evidence';dateBtn.onclick=()=>openDate(d,entry);
+      if(photoPresent(d,i,entry)){const dot=document.createElement('span');dot.className='evidence-dot';dot.textContent=' 📷';dateBtn.append(dot)}
+      dateWrap.append(dateBtn);
+      if(entry===1){const plus=document.createElement('button');plus.className='add-entry';plus.type='button';plus.textContent='+';plus.title='Add another backtest for '+d;plus.setAttribute('aria-label',plus.title);plus.onclick=()=>addEntry(d,i);dateWrap.append(plus)}
+      dateCell.append(dateWrap);let count=0;
+      const score=document.createElement('span');score.className='matrix-score';
+      const updateScore=()=>{score.textContent=count+'/'+rules.length;score.classList.toggle('complete',rules.length>0&&count===rules.length)};
+      rules.forEach(rule=>{
+        const td=tr.insertCell(),checkbox=document.createElement('input'),key=dailyKey(d,i,rule.j,entry);
+        checkbox.type='checkbox';checkbox.title=rule.letter+') '+rule.text;checkbox.setAttribute('aria-label',d+' — Backtest '+entry+' — '+rule.letter+') '+rule.text);
+        checkbox.checked=stored(key)==='1';if(checkbox.checked){count++;total++}
+        checkbox.addEventListener('change',()=>{try{localStorage.setItem(key,checkbox.checked?'1':'0');const delta=checkbox.checked?1:-1;count+=delta;total+=delta;updateScore();updateSummary()}catch(e){checkbox.checked=!checkbox.checked;alert('Unable to save this checkbox.')}});
+        td.append(checkbox)
+      });
+      tr.insertCell().append(score);updateScore()
+    }
   }
-  updateSummary();document.querySelector('#matrixScroll').scrollTop=0
+  if(!rowCount){const tr=body.insertRow(),td=tr.insertCell();td.colSpan=rules.length+2;td.className='empty-records';td.textContent='No saved backtests for this month.'}
+  updateSummary();scroll.scrollTop=keepScroll?oldScroll:0
 }
-function openDate(d){selectedDate=d;positions.check=matrixTopic;calendar.classList.remove('show');stage.classList.remove('hidden');datebar.classList.add('show');document.querySelector('#dateTitle').textContent=new Date(d+'T12:00:00').toLocaleDateString('en',{weekday:'long',year:'numeric',month:'long',day:'numeric'});render();stage.classList.remove('enter');void stage.offsetWidth;stage.classList.add('enter')}
+function openDate(d,entry=1){
+  selectedDate=d;selectedEntry=entry;positions.check=current;calendar.classList.remove('show');stage.classList.remove('hidden');datebar.classList.add('show');
+  document.querySelector('#dateTitle').textContent=new Date(d+'T12:00:00').toLocaleDateString('en',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' · Backtest '+entry;
+  render();stage.classList.remove('enter');void stage.offsetWidth;stage.classList.add('enter')
+}
 const dbPromise=new Promise((resolve,reject)=>{try{const r=indexedDB.open('LondonSessionEvidence',1);r.onupgradeneeded=()=>r.result.createObjectStore('gallery');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)}catch(e){reject(e)}});dbPromise.catch(()=>{});
 async function galleryRead(k){const db=await dbPromise;return new Promise((res,rej)=>{const r=db.transaction('gallery').objectStore('gallery').get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
 async function galleryWrite(k,v){const db=await dbPromise;return new Promise((res,rej)=>{const t=db.transaction('gallery','readwrite');t.objectStore('gallery').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
-function addPhoto(section,i){const key=scoped('lsg_photo_'+selectedDate+'_'+i),area=document.createElement('div');area.className='photo-area';area.innerHTML=`<div class="photo-head"><div><strong>Chart evidence</strong><div class="cal-help">Attach screenshots and add a note to each image.</div></div><span class="photo-count"></span></div><label class="upload-label">＋ Add chart photos · Select multiple images<input class="file-picker" type="file" multiple accept="image/*"></label><div class="gallery"></div><div class="photo-msg" role="status"></div>`;section.append(area);const input=area.querySelector('input'),grid=area.querySelector('.gallery'),msg=area.querySelector('.photo-msg');let entries=[],queue=Promise.resolve();input.disabled=true;
+function addPhoto(section,i){const key=evidenceKey(selectedDate,i,selectedEntry),area=document.createElement('div');area.className='photo-area';area.innerHTML=`<div class="photo-head"><div><strong>Chart evidence</strong><div class="cal-help">Attach screenshots and add a note to each image.</div></div><span class="photo-count"></span></div><label class="upload-label">＋ Add chart photos · Select multiple images<input class="file-picker" type="file" multiple accept="image/*"></label><div class="gallery"></div><div class="photo-msg" role="status"></div>`;section.append(area);const input=area.querySelector('input'),grid=area.querySelector('.gallery'),msg=area.querySelector('.photo-msg');let entries=[],queue=Promise.resolve();input.disabled=true;
 function save(){const snapshot=entries.map(x=>({...x}));queue=queue.catch(()=>{}).then(()=>galleryWrite(key,snapshot)).then(()=>{try{if(snapshot.length)localStorage.setItem(key+'_count',String(snapshot.length));else localStorage.removeItem(key+'_count')}catch(e){}msg.textContent='Saved locally.'}).catch(()=>{msg.textContent='Could not save. Browser storage may be full or unavailable.'});return queue}
 function draw(){grid.replaceChildren();area.querySelector('.photo-count').textContent=entries.length+' photos';entries.forEach((entry,n)=>{const card=document.createElement('article');card.className='photo-card';const img=document.createElement('img');img.alt='Chart evidence '+(n+1);img.src=entry.src;img.onclick=()=>{const d=document.createElement('dialog'),p=document.createElement('img'),close=document.createElement('button');p.src=entry.src;close.textContent='Close';close.onclick=()=>d.close();d.append(p,close);document.body.append(d);d.onclose=()=>d.remove();d.showModal()};const meta=document.createElement('div');meta.className='photo-meta';const title=document.createElement('strong');title.textContent='Photo '+(n+1);const remove=document.createElement('button');remove.textContent='Remove';remove.onclick=()=>{if(!confirm('Remove this photo and its note?'))return;entries=entries.filter(x=>x!==entry);draw();save()};meta.append(title,remove);const note=document.createElement('textarea');note.placeholder='Write a short note about this chart…';note.setAttribute('aria-label','Note for photo '+(n+1));note.value=entry.note||'';note.oninput=()=>{entry.note=note.value;save()};card.append(img,meta,note);grid.append(card)})}
 (async()=>{try{const saved=await galleryRead(key);if(saved!==undefined)entries=saved;else{const old=localStorage.getItem(key);if(old){entries=[{src:old,note:''}];await galleryWrite(key,entries);localStorage.setItem(key+'_count','1');localStorage.removeItem(key)}}draw();input.disabled=false}catch(e){msg.textContent='Photo storage is unavailable in this browser.'}})();
 input.onchange=async()=>{const files=Array.from(input.files);input.value='';input.disabled=true;let failed=0;for(const f of files){try{const src=await new Promise((res,rej)=>{const r=new FileReader();r.onerror=rej;r.onload=()=>{const p=new Image();p.onerror=rej;p.onload=()=>res(r.result);p.src=r.result};r.readAsDataURL(f)});entries.push({src,note:''})}catch(e){failed++}}draw();await save();if(failed)msg.textContent+=' '+failed+' invalid image(s) skipped.';input.disabled=false};}
-document.querySelector('#monthPrev').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()-1,1);renderCalendar()};document.querySelector('#monthNext').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+1,1);renderCalendar()};document.querySelector('#todayBtn').onclick=()=>{month=new Date();renderCalendar()};document.querySelector('#backCal').onclick=showCalendar;showTopics();</script><style>#lsgUpdate{position:fixed;right:18px;bottom:16px;z-index:20;background:#244f79;color:white;box-shadow:0 4px 16px #244f7940}#lsgUpdateDialog{width:min(440px,90vw);padding:24px;color:#233b55}#lsgUpdateDialog progress{width:100%;margin:12px 0}#lsgUpdateDialog .update-actions{display:flex;gap:8px;flex-wrap:wrap}</style>
+document.querySelector('#monthPrev').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()-1,1);renderCalendar()};document.querySelector('#monthNext').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+1,1);renderCalendar()};document.querySelector('#todayBtn').onclick=()=>{month=new Date();renderCalendar()};document.querySelector('#backCal').onclick=showCalendar;let lastToday=dateKey(new Date());setInterval(()=>{const now=dateKey(new Date());if(now!==lastToday){lastToday=now;if(calendar.classList.contains('show'))renderCalendar(true)}},30000);showTopics();</script><style>#lsgUpdate{position:fixed;right:18px;bottom:16px;z-index:20;background:#244f79;color:white;box-shadow:0 4px 16px #244f7940}#lsgUpdateDialog{width:min(440px,90vw);padding:24px;color:#233b55}#lsgUpdateDialog progress{width:100%;margin:12px 0}#lsgUpdateDialog .update-actions{display:flex;gap:8px;flex-wrap:wrap}</style>
 <button id="lsgUpdate" type="button">↻ Update</button>
 <dialog id="lsgUpdateDialog"><h2>Application update</h2><p id="lsgVersion"></p><p id="lsgUpdateStatus" role="status">Check for a new version.</p><progress id="lsgProgress" max="100" value="0"></progress><div class="update-actions"><button id="lsgDownload">Check &amp; download</button><button id="lsgInstall" disabled>Install &amp; restart</button><button id="lsgClose">Close</button></div></dialog>
 <script>
