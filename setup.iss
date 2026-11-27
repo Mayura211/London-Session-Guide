@@ -1,10 +1,11 @@
 #define AppVersion GetEnv('LSG_VERSION')
 [Setup]
 AppId={{C831F464-2732-4CB1-B89E-EC24A7CFAE38}
-AppName=London Session Guide
+AppName=Forex Backtest Data
+UninstallDisplayName=Forex Backtest Data
 AppVersion={#AppVersion}
 DefaultDirName={localappdata}\Programs\LondonSessionGuide
-DefaultGroupName=London Session Guide
+DefaultGroupName=Forex Backtest Data
 PrivilegesRequired=lowest
 OutputDir=installer
 OutputBaseFilename=LondonSessionGuide_Setup
@@ -17,11 +18,14 @@ UninstallDisplayIcon={app}\LondonSessionGuide.exe
 [Files]
 Source: "dist\LondonSessionGuide.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "icon.ico"; DestDir: "{app}"; DestName: "LondonGuide-v105.ico"; Flags: ignoreversion
+[InstallDelete]
+Type: files; Name: "{autoprograms}\London Session Guide.lnk"
+Type: files; Name: "{autodesktop}\London Session Guide.lnk"
 [Icons]
-Name: "{autoprograms}\London Session Guide"; Filename: "{app}\LondonSessionGuide.exe"; IconFilename: "{app}\LondonGuide-v105.ico"
-Name: "{autodesktop}\London Session Guide"; Filename: "{app}\LondonSessionGuide.exe"; IconFilename: "{app}\LondonGuide-v105.ico"
+Name: "{autoprograms}\Forex Backtest Data"; Filename: "{app}\LondonSessionGuide.exe"; IconFilename: "{app}\LondonGuide-v105.ico"
+Name: "{autodesktop}\Forex Backtest Data"; Filename: "{app}\LondonSessionGuide.exe"; IconFilename: "{app}\LondonGuide-v105.ico"
 [Run]
-Filename: "{app}\LondonSessionGuide.exe"; Description: "Open London Session Guide"; Flags: nowait postinstall skipifsilent; Check: not IsAppUpdate; BeforeInstall: ResetFrozenAppEnvironment
+Filename: "{app}\LondonSessionGuide.exe"; Description: "Open Forex Backtest Data"; Flags: nowait postinstall skipifsilent; Check: not IsAppUpdate; BeforeInstall: ResetFrozenAppEnvironment
 
 Filename: "{app}\LondonSessionGuide.exe"; Flags: nowait; Check: IsAppUpdate; BeforeInstall: ResetFrozenAppEnvironment
 [Code]
