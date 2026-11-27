@@ -97,7 +97,110 @@ header .page-label{color:#c7dbe9;font-size:14px;text-align:right}.stage{flex-dir
 .matrix-date-cell .delete-entry{flex:none;width:27px;height:27px;display:grid;place-items:center;padding:3px;border-radius:6px;color:#b64b51;background:#fff2f2;border-color:#e9c7ca}
 .matrix-date-cell .delete-entry:hover:not(:disabled){background:#f9dfe2;border-color:#d99ba1}
 .matrix-date-cell .delete-entry svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-</style><body><header><div><small>TRADING PLAYBOOK</small><h1>Forex Backtest Data</h1></div><div class="header-actions"><button id="topicsBack" hidden>← Topics</button><div class="page-label" id="pageLabel" aria-live="polite">London Session · Topics</div></div></header><nav class="session-tabs" aria-label="Trading sessions"><button data-session="london" class="active" aria-pressed="true">London Session</button><button data-session="new_york" aria-pressed="false">New York Session</button><button data-session="more" aria-pressed="false">More Session</button></nav><div id="topicMenu" role="region" aria-label="London Session topics"><div class="topic-menu-list" id="topicMenuList"></div></div><div id="comingSoon" role="region" aria-label="Coming soon"><div class="coming-card"><div class="coming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><small id="comingSession"></small><h2>Coming Soon</h2><p>This session is not available yet.</p></div></div><div id="calendar"><button class="side-arrow calendar-guide" id="calendarGuide" aria-label="Return to session guide" title="Return to guide (Left arrow)">←</button><div class="matrix-card"><div class="matrix-top"><div><small>MONTHLY BACKTEST JOURNAL</small><h2 id="matrixTitle"></h2></div><div class="matrix-month"><button id="monthPrev" aria-label="Previous month">←</button><strong id="monthTitle"></strong><button id="monthNext" aria-label="Next month">→</button><button id="todayBtn">This month</button></div></div><div class="matrix-legend" id="matrixLegend"></div><div class="matrix-scroll" id="matrixScroll"><table class="matrix-table" id="matrixTable" aria-label="Monthly backtest checklist"></table></div><div class="matrix-footer"><span>Click a date for chart evidence. Use + to add another backtest on that date.</span><strong id="matrixSummary" aria-live="polite"></strong></div></div></div><div id="datebar" class="datebar"><button id="backCal">← Monthly checklist</button><strong id="dateTitle"></strong></div><div class="stage"><button id="prev" class="side-arrow" aria-label="Session guide" title="Guide (Left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7M8 12h13"/></svg></button><main id="track" aria-label="Trading topics"></main><button id="next" class="side-arrow" aria-label="Session backtest" title="Backtest (Right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M3 12h13"/></svg></button></div><div id="status" role="status" style="position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden"></div><script>
+/* v1.0.15 — Studio: clean financial research workspace */
+:root{
+  --navy:#163347;--ink:#253b4b;--muted:#617788;--accent:#227b76;--teal:#258375;
+  --canvas:#eef3f6;--surface:#fff;--line:#dce5eb;
+  --soft:#f5f8fa;--shadow:0 3px 12px #16334708;
+}
+body{background:linear-gradient(155deg,#f5f8fa 0%,#e9f0f4 100%);font-family:"Segoe UI Variable","Segoe UI",Arial,sans-serif;font-size:14px;color:var(--ink);scrollbar-color:#b8cad3 transparent}
+header{flex:none;background:#142d3e;border:0;box-shadow:none;padding:19px clamp(18px,3.2vw,48px);gap:14px;min-height:82px}
+.brand{display:flex;align-items:center;gap:13px;min-width:0}
+.brand-mark{display:grid;place-items:center;width:46px;height:46px;flex:none;border-radius:13px;border:1px solid #ffffff20;background:#ffffff0d;color:#8ae0cc}
+.brand-mark svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+header small{display:block;letter-spacing:2px;font-size:9px;color:#a7c0cb}
+header h1{font-size:clamp(19px,2.3vw,27px);line-height:1.15;font-weight:650;letter-spacing:-.65px;margin:4px 0 0;color:#f8fcff}
+.header-actions{gap:9px;flex-wrap:wrap;justify-content:flex-end}
+header .page-label{font-size:12px;color:#c2d4dd;font-weight:500;padding:8px 12px;border:1px solid #ffffff1d;border-radius:8px}
+header #topicsBack{background:#ffffff0c;border:1px solid #ffffff25;color:#edf8fb;padding:8px 12px}
+header #topicsBack:hover{background:#ffffff20}
+.session-tabs{padding:11px clamp(18px,3.2vw,48px);gap:8px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px #18374805}
+.session-tabs button{border-radius:10px;border:1px solid transparent;background:#f3f6f8;color:#526a7c;padding:11px 12px;font-size:13px;letter-spacing:.1px;box-shadow:none}
+.session-tabs button:hover:not(:disabled){background:#e8f3f1;color:#185e58}
+.session-tabs button.active{background:#e2f1ee;border-color:#bcddd6;color:#17665e;box-shadow:inset 0 -2px 0 #258375}
+.session-tabs button:not(.active)[data-session="new_york"],.session-tabs button:not(.active)[data-session="more"]{color:#657b8b}
+button{background:#fff;border:1px solid var(--line);color:#365368;font-weight:600;border-radius:9px}
+button:hover:not(:disabled){background:#eff6f6;border-color:#bfd8d5}
+button:focus-visible,textarea:focus-visible{outline:2px solid #258375;outline-offset:2px}
+#topicMenu{padding:clamp(18px,4vw,44px) clamp(24px,7vw,100px)}
+.topic-menu-list{max-width:1000px;gap:15px;margin:0 auto}
+.topic-menu-item{min-height:116px;gap:20px;padding:24px 26px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.topic-menu-item:hover:not(:disabled){background:#fcfffe;border-color:#9ec9c2;box-shadow:0 7px 20px #1633470d;transform:translateY(-2px)}
+.topic-menu-title{font-size:clamp(18px,2.2vw,27px);font-weight:650;line-height:1.35;letter-spacing:-.45px;color:var(--navy)}
+.topic-menu-number{display:grid;place-items:center;width:49px;height:49px;padding:0;flex:none;background:#e7f3f0;color:#246f66;font-size:16px;font-weight:700;letter-spacing:.5px;border-radius:12px}
+.topic-menu-item svg{box-sizing:content-box;padding:9px;border:1px solid #dce9e8;border-radius:50%;background:#f4f9f8;width:20px;height:20px;color:var(--accent)}
+.stage{padding:0 72px 14px}
+.stage section{padding:24px clamp(8px,1.6vw,26px) 18px;scrollbar-width:thin}
+section>small,.matrix-top small{color:#527987;font-size:10px;letter-spacing:1.8px;font-weight:750}
+h2{color:var(--navy);font-size:clamp(21px,2.7vw,30px);line-height:1.24;letter-spacing:-.65px;font-weight:650;margin:7px 0 19px}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(106px,1fr);gap:13px;flex:1 0 auto;min-height:0}
+.rule{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 15px;gap:9px;box-shadow:var(--shadow)}
+.rule:hover{border-color:#c1d2db}.rule:focus-within{border-color:#9bc8bd;box-shadow:0 0 0 3px #2583750c}
+.statement{font-size:clamp(12px,1.15vw,14px);font-weight:600;line-height:1.45;align-items:flex-start}
+.letter{background:#e8f3f0;color:#256e64;border-radius:7px;font-size:11px;min-width:30px;padding:3px 6px}
+textarea{border:1px solid #e0e8ed;border-radius:8px;background:#f6f9fa;color:var(--ink);padding:9px 11px;min-height:44px;line-height:1.5;resize:vertical;font-size:13px}
+textarea:focus{background:#fff;outline:none;border-color:#8cbbb2}
+textarea::placeholder{color:#778d9c}
+.side-arrow{width:46px;height:46px;border-radius:13px;border:1px solid #d2e0e6;background:#fff;color:#26766c;box-shadow:0 3px 12px #16334710;top:50%}
+.side-arrow:hover:not(:disabled){background:#e5f3ef;border-color:#a9d1c9;box-shadow:0 5px 14px #16334713}
+#next:not(:disabled){background:#226e65;color:#fff;border-color:#226e65}
+#next:hover:not(:disabled){background:#185c54}
+#calendar.show{padding-block:19px 18px;padding-inline:72px}
+.matrix-card{background:#fff;border:1px solid var(--line);box-shadow:0 5px 25px #16334708;border-radius:17px;padding:20px 22px 15px}
+.matrix-top{gap:14px;align-items:center}.matrix-top h2{font-size:clamp(17px,2vw,24px);margin:4px 0 0}
+.matrix-month{padding:5px;border:1px solid var(--line);border-radius:10px;background:#f5f8fa;gap:5px}
+.matrix-month button{padding:7px 10px;background:#fff;border-radius:7px}
+.matrix-month strong{font-size:13px;color:var(--navy);font-variant-numeric:tabular-nums}
+.matrix-legend{margin:14px 0 12px;max-height:140px;overflow:auto;flex-shrink:0}
+.matrix-legend details{background:#f5f8fa;border:1px solid #e0e8ed;border-radius:9px;padding:9px 12px;line-height:1.55;color:var(--muted)}
+.matrix-legend summary{color:#3c6270;font-size:12px}
+.matrix-scroll{border-radius:10px;border-color:#dce5eb;background:#fff;scrollbar-color:#b9cbd3 #f5f8fa}
+.matrix-table{font-variant-numeric:tabular-nums}
+.matrix-table th,.matrix-table td{height:48px;padding:7px 5px;border-bottom:1px solid #e8eef1;border-right:1px solid #eff3f5}
+.matrix-table th{background:#edf3f5;color:#3b596b;font-weight:700;font-size:12px;height:41px}
+.matrix-table th:first-child{background:#edf3f5}
+.matrix-table td:first-child{background:#fff}
+.matrix-table tr:nth-child(even) td,.matrix-table tr:nth-child(even) td:first-child{background:#f7fafb}
+.matrix-table tr:hover td,.matrix-table tr:hover td:first-child{background:#f0f7f6}
+.matrix-table tr.is-today td,.matrix-table tr.is-today td:first-child{background:#eaf5f1}
+.matrix-table tr.is-today td:first-child{box-shadow:inset 3px 0 0 #258375}
+.matrix-table tr.weekend td:first-child{color:#657b8b}
+.matrix-table input[type=checkbox]{width:21px;height:21px;border:1.5px solid #a9bec8;border-radius:6px;background:#fff}
+.matrix-table input[type=checkbox]:checked{background:#258375;border-color:#258375}
+.matrix-table input[type=checkbox]:focus-visible{outline:2px solid #258375}
+.matrix-date{color:#304e60;font-size:13px;line-height:1.3;padding:4px}
+.matrix-date:hover:not(:disabled){background:transparent;color:#17665e;text-decoration:none}
+.matrix-entry-label{font-size:10px;color:#657c8c;margin-top:3px}
+.matrix-score{background:#edf3f5;border-radius:7px;padding:5px 9px;color:#486679;font-size:11px}
+.matrix-score.complete{background:#dff2eb;color:#17665e}
+.matrix-date-cell .add-entry,.matrix-date-cell .delete-entry{width:28px;height:28px;padding:0;display:grid;place-items:center;border-radius:7px}
+.matrix-date-cell .add-entry{background:#e4f2ee;color:#236b61;border:1px solid #c9e1d9}
+.matrix-date-cell .add-entry:hover{background:#cfe9df}.matrix-date-cell .delete-entry{background:#fff3f2;border:1px solid #efd5d3;color:#aa4a4b}
+.matrix-footer{padding-top:12px;line-height:1.4;gap:14px}
+.matrix-footer strong{color:#355b67;font-weight:650;text-align:right;font-variant-numeric:tabular-nums}
+.datebar{padding:11px clamp(18px,3vw,45px);background:#f8fbfc;border-bottom:1px solid var(--line);gap:14px}
+.datebar button{padding:8px 12px}.datebar strong{font-size:13px;color:#3d6171}
+.photo-area{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px}
+.photo-head strong{font-size:18px;color:var(--navy)}
+.photo-count{padding:5px 10px;font-size:12px;border-radius:7px;background:#edf4f5;color:#4b6a79}
+.upload-label{border:1.5px dashed #94bcb8;background:#f1f8f6;padding:32px 15px;border-radius:11px;color:#236b61}
+.upload-label:hover{background:#e4f2ed;border-color:#6fa99f}
+.upload-label:focus-within{outline:2px solid #258375;outline-offset:3px}
+.gallery{gap:16px}.photo-card{padding:13px;border-radius:12px;background:#fff;border:1px solid var(--line);box-shadow:none}
+.photo-card img{background:#eff4f6;border-radius:8px}.photo-card textarea{min-height:80px}
+.photo-meta button{background:#fff4f3;color:#a34649;border-color:#efd5d3}
+.photo-msg{font-size:12px;color:#527987}
+.coming-card{border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 30px #16334708}
+.coming-icon{background:#e7f3f0;color:#27796f}.coming-card h2{letter-spacing:-1px}
+dialog{color:var(--ink);background:#fff;border-radius:16px;box-shadow:0 20px 65px #142d3e35}
+dialog::backdrop{background:#142d3eb8}
+#lsgUpdateDialog{background:#fff;border-color:var(--line);color:var(--ink)}
+#lsgUpdateDialog progress{accent-color:#258375}
+@media(max-width:900px){.header-actions{gap:6px}.stage,#calendar.show{padding-inline:57px}.side-arrow{width:39px;height:42px}.matrix-card{padding:15px}.topic-menu-item{min-height:98px}}
+@media(max-width:650px){header{padding:12px;min-height:64px}.brand-mark{width:36px;height:36px}.brand-mark svg{width:22px;height:22px}.header-actions{justify-content:flex-start}header .page-label{padding:5px 7px}.session-tabs{padding:8px 10px;gap:4px}.session-tabs button{padding:9px 4px;font-size:11px}.stage,#calendar.show{padding-inline:38px}.side-arrow{width:32px;height:36px;border-radius:9px}.stage section{padding:13px 4px}.rules{grid-template-columns:1fr;grid-auto-rows:minmax(104px,auto)}.rule{padding:11px}.topic-menu-item{min-height:88px;padding:14px 12px;gap:12px}.topic-menu-number{width:38px;height:38px}.topic-menu-item svg{padding:5px}.matrix-card{padding:10px}.matrix-month{flex-wrap:wrap}.matrix-footer{font-size:11px;flex-wrap:wrap}.photo-area{padding:14px}.matrix-table th:first-child,.matrix-table td:first-child{width:140px}}
+@media(max-height:650px) and (min-width:651px){header{padding-block:12px;min-height:64px}.stage section{padding-top:14px}.rules{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(100px,auto)}.rule{min-height:100px}.topic-menu-item{min-height:82px;padding-block:14px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style><body><header><div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4v16M12 3v18M19 6v14"/><rect x="3" y="8" width="4" height="7" rx="1" fill="#142d3e"/><rect x="10" y="5" width="4" height="10" rx="1" fill="#142d3e"/><rect x="17" y="10" width="4" height="6" rx="1" fill="#142d3e"/></svg></span><div><small>TRADING PLAYBOOK</small><h1>Forex Backtest Data</h1></div></div><div class="header-actions"><button id="topicsBack" hidden>← Topics</button><div class="page-label" id="pageLabel" aria-live="polite">London Session · Topics</div><button id="lsgUpdate" type="button">↻ Update</button></div></header><nav class="session-tabs" aria-label="Trading sessions"><button data-session="london" class="active" aria-pressed="true">London Session</button><button data-session="new_york" aria-pressed="false">New York Session</button><button data-session="more" aria-pressed="false">More Session</button></nav><div id="topicMenu" role="region" aria-label="London Session topics"><div class="topic-menu-list" id="topicMenuList"></div></div><div id="comingSoon" role="region" aria-label="Coming soon"><div class="coming-card"><div class="coming-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><small id="comingSession"></small><h2>Coming Soon</h2><p>This session is not available yet.</p></div></div><div id="calendar"><button class="side-arrow calendar-guide" id="calendarGuide" aria-label="Return to session guide" title="Return to guide (Left arrow)">←</button><div class="matrix-card"><div class="matrix-top"><div><small>MONTHLY BACKTEST JOURNAL</small><h2 id="matrixTitle"></h2></div><div class="matrix-month"><button id="monthPrev" aria-label="Previous month">←</button><strong id="monthTitle"></strong><button id="monthNext" aria-label="Next month">→</button><button id="todayBtn">This month</button></div></div><div class="matrix-legend" id="matrixLegend"></div><div class="matrix-scroll" id="matrixScroll"><table class="matrix-table" id="matrixTable" aria-label="Monthly backtest checklist"></table></div><div class="matrix-footer"><span>Click a date for chart evidence. Use + to add another backtest on that date.</span><strong id="matrixSummary" aria-live="polite"></strong></div></div></div><div id="datebar" class="datebar"><button id="backCal">← Monthly checklist</button><strong id="dateTitle"></strong></div><div class="stage"><button id="prev" class="side-arrow" aria-label="Session guide" title="Guide (Left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7M8 12h13"/></svg></button><main id="track" aria-label="Trading topics"></main><button id="next" class="side-arrow" aria-label="Session backtest" title="Backtest (Right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M3 12h13"/></svg></button></div><div id="status" role="status" style="position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden"></div><script>
 const londonData=[['A','When Is The London Session Not Ideal?',['After a large range day greater than 2 times the 5 day ADR.','After a series of 3 consecutive Up Closes – avoid Longs.','After a series of 3 consecutive Down Closes – avoid Shorts.','After a FOMC event that produces extreme whipsaw.','Ahead of Non-Farm Payroll numbers.','The same day trading is heading into a long weekend – holiday.','Multiple High to Medium Impact News Drivers for that particular Market.','An absence of any News during London can be a “wildcard” day.']],['B','What Characteristics Do I Look For?',['The CBDR is greater than 50 pips. [Possibly Pass On London]','The Asian Range is greater than 40 pips. [Consider Delayed Protraction]','The Market starts a sustained rally or decline from 8:00 pm NY. [Poor]','If CBDR and or Asian Range is not visually consolidating… avoid London.','We aim for days when the bank will “hold” the market to build Open Float.','If the Market is trending from 8:00 pm NY – London becomes sloppy.','When the Market is conditioned for London Slop – sleep in & trade NYO.','Accumulation – Manipulation – Distribution is the business intraday.']],['C','When Is London Open Killzone Ideal?',['The Daily chart is clearly respecting PD Arrays.','The Market has recently responded off a HTF PD Array & not met an opposing PD Array.','When the Market is poised to trade higher on the Daily to Premium Arrays – London Longs are ideal.','When the Market is poised to trade lower on the Daily to Discount Arrays – London Shorts are ideal.','When the daily range has not recently exceeded its 5 day ADR – Expansion Day is due to form.']]];
 const sessionNames={london:'London Session',new_york:'New York Session',more:'More Session'};
 let session='london';
@@ -310,8 +413,7 @@ function save(){const snapshot=entries.map(x=>({...x}));queue=queue.catch(()=>{}
 function draw(){grid.replaceChildren();area.querySelector('.photo-count').textContent=entries.length+' photos';entries.forEach((entry,n)=>{const card=document.createElement('article');card.className='photo-card';const img=document.createElement('img');img.alt='Chart evidence '+(n+1);img.src=entry.src;img.onclick=()=>{const d=document.createElement('dialog'),p=document.createElement('img'),close=document.createElement('button');p.src=entry.src;close.textContent='Close';close.onclick=()=>d.close();d.append(p,close);document.body.append(d);d.onclose=()=>d.remove();d.showModal()};const meta=document.createElement('div');meta.className='photo-meta';const title=document.createElement('strong');title.textContent='Photo '+(n+1);const remove=document.createElement('button');remove.textContent='Remove';remove.onclick=()=>{if(!confirm('Remove this photo and its note?'))return;entries=entries.filter(x=>x!==entry);draw();save()};meta.append(title,remove);const note=document.createElement('textarea');note.placeholder='Write a short note about this chart…';note.setAttribute('aria-label','Note for photo '+(n+1));note.value=entry.note||'';note.oninput=()=>{entry.note=note.value;save()};card.append(img,meta,note);grid.append(card)})}
 (async()=>{try{const saved=await galleryRead(key);if(saved!==undefined)entries=saved;else{const old=localStorage.getItem(key);if(old){entries=[{src:old,note:''}];await galleryWrite(key,entries);localStorage.setItem(key+'_count','1');localStorage.removeItem(key)}}draw();input.disabled=false}catch(e){msg.textContent='Photo storage is unavailable in this browser.'}})();
 input.onchange=async()=>{const files=Array.from(input.files);input.value='';input.disabled=true;let failed=0;for(const f of files){try{const src=await new Promise((res,rej)=>{const r=new FileReader();r.onerror=rej;r.onload=()=>{const p=new Image();p.onerror=rej;p.onload=()=>res(r.result);p.src=r.result};r.readAsDataURL(f)});entries.push({src,note:''})}catch(e){failed++}}draw();await save();if(failed)msg.textContent+=' '+failed+' invalid image(s) skipped.';input.disabled=false};}
-document.querySelector('#monthPrev').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()-1,1);renderCalendar()};document.querySelector('#monthNext').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+1,1);renderCalendar()};document.querySelector('#todayBtn').onclick=()=>{month=new Date();renderCalendar()};document.querySelector('#backCal').onclick=()=>showCalendar(-1);let lastToday=dateKey(new Date());setInterval(()=>{const now=dateKey(new Date());if(now!==lastToday){lastToday=now;if(calendar.classList.contains('show'))renderCalendar(true)}},30000);showTopics();</script><style>#lsgUpdate{position:fixed;right:18px;bottom:16px;z-index:20;background:#244f79;color:white;box-shadow:0 4px 16px #244f7940}#lsgUpdateDialog{width:min(440px,90vw);padding:24px;color:#233b55}#lsgUpdateDialog progress{width:100%;margin:12px 0}#lsgUpdateDialog .update-actions{display:flex;gap:8px;flex-wrap:wrap}</style>
-<button id="lsgUpdate" type="button">↻ Update</button>
+document.querySelector('#monthPrev').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()-1,1);renderCalendar()};document.querySelector('#monthNext').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+1,1);renderCalendar()};document.querySelector('#todayBtn').onclick=()=>{month=new Date();renderCalendar()};document.querySelector('#backCal').onclick=()=>showCalendar(-1);let lastToday=dateKey(new Date());setInterval(()=>{const now=dateKey(new Date());if(now!==lastToday){lastToday=now;if(calendar.classList.contains('show'))renderCalendar(true)}},30000);showTopics();</script><style>#lsgUpdate{position:static!important;padding:8px 12px!important;border-radius:9px!important;background:#ffffff0e!important;border-color:#ffffff2b!important;color:#e5f3f6!important;box-shadow:none!important;font-size:12px;white-space:nowrap}#lsgUpdate:hover{background:#ffffff21!important}#lsgUpdateDialog{width:min(440px,90vw);padding:24px;color:#233b55}#lsgUpdateDialog progress{width:100%;margin:12px 0}#lsgUpdateDialog .update-actions{display:flex;gap:8px;flex-wrap:wrap}</style>
 <dialog id="lsgUpdateDialog"><h2>Application update</h2><p id="lsgVersion"></p><p id="lsgUpdateStatus" role="status">Check for a new version.</p><progress id="lsgProgress" max="100" value="0"></progress><div class="update-actions"><button id="lsgDownload">Check &amp; download</button><button id="lsgInstall" disabled>Install &amp; restart</button><button id="lsgClose">Close</button></div></dialog>
 <script>
 (()=>{const q=id=>document.getElementById(id),d=q('lsgUpdateDialog'),status=q('lsgUpdateStatus'),download=q('lsgDownload'),install=q('lsgInstall');let timer=null,busy=false;
